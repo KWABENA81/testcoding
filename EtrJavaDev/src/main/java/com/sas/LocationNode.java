@@ -1,40 +1,29 @@
 package com.sas;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class LocationNode {
-
     private String locationName;
-
     private Integer locationId;
-
     private String latitude;
-
     private String longitude;
-
-    private LocationNode prevNode;
-
-    private LocationNode nextNode;
-
-    public LocationNode() {
-        this.locationName = null;
-        this.locationId = null;
-        this.latitude = null;
-        this.longitude = null;
-        this.prevNode = null;
-        this.nextNode = null;
-    }
+    private List<Route> routeList;
 
     public LocationNode(String locationName, Integer id, String latitude, String longitude) {
         this.locationName = locationName;
         this.locationId = id;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.prevNode = null;
-        this.nextNode = null;
+
+        routeList = new ArrayList<>();
     }
 
+    public List<Route> getRouteList() {
+        return routeList;
+    }
 
     public String getLocationName() {
         return locationName;
@@ -59,22 +48,6 @@ public class LocationNode {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
-    }
-
-    public LocationNode getPrevNode() {
-        return prevNode;
-    }
-
-    public void setPrevNode(LocationNode prevNode) {
-        this.prevNode = prevNode;
-    }
-
-    public LocationNode getNextNode() {
-        return nextNode;
-    }
-
-    public void setNextNode(LocationNode nextNode) {
-        this.nextNode = nextNode;
     }
 
     public Integer getLocationId() {
@@ -107,13 +80,9 @@ public class LocationNode {
         String str = "";
         str += "LocationNode{" +
                 "locationName='" + locationName + '\'' +
-                ", \nlatitude=" + latitude +
+                ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ",\nlocationId=" + locationId;
-        ;
-        str += (this.prevNode != null) ? ", prevNode=" + prevNode.locationName : "";
-        str += (this.nextNode != null) ? ", nextNode=" + nextNode.locationName : "";
-        str += "}";
+                ", locationId=" + locationId + "}";
         return str;
     }
 

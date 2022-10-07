@@ -2,12 +2,17 @@ package com.sas;
 
 public class Main {
     public static void main(String[] args) {
+        readLocations();
+    }
 
-        LocationNode locationNode0 = createLocationNode(1, "QEW", 43.484361d, -79.766037d);
-        LocationNode locationNode2 = createLocationNode(2, "Dundas Street", 43.383554d, -79.833478d);
-        locationNode0.setNextNode(locationNode2);
-        locationNode2.setPrevNode(locationNode0);
-
+    private static void readLocations() {
+        String fileString = null;
+        String file = "";
+        fileString = new String();
+        LocationNode locationNode0 =
+                createLocationNode(1, "QEW", 43.484361d, -79.766037d);
+        LocationNode locationNode2 =
+                createLocationNode(2, "Dundas Street", 43.383554d, -79.833478d);
         computeDistanceAndCharge(locationNode0, locationNode2);
     }
 
@@ -17,7 +22,6 @@ public class Main {
 
     private static void print(LocationNode locationNode1, LocationNode locationNode2) {
         System.out.println(locationNode2.toString());
-
         System.out.println(locationNode1.toString());
     }
 

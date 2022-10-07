@@ -3,39 +3,46 @@ package com.sas;
 import java.util.Objects;
 
 public class Route {
-    private LocationNode sourceLocation;
+    private LocationNode nextLocationNode;
+    private String distance;
+    private Boolean enterStatus;
+    private Boolean exitStatus;
 
-    private LocationNode destLocation;
-
-    private Float distance;
-
-    public Route(LocationNode sourceLocation, LocationNode destLocation, Float distance) {
-        this.sourceLocation = sourceLocation;
-        this.destLocation = destLocation;
+    public Route(LocationNode nextLocationNode, String distance) {
+        this.nextLocationNode = nextLocationNode;
         this.distance = distance;
+
     }
 
-    public LocationNode getSourceLocation() {
-        return sourceLocation;
+    public LocationNode getNextLocationNode() {
+        return nextLocationNode;
     }
 
-    public LocationNode getDestLocation() {
-        return destLocation;
+    public Boolean getEnterStatus() {
+        return enterStatus;
     }
 
-    public Float getDistance() {
+    public void setEnterStatus(Boolean enterStatus) {
+        this.enterStatus = enterStatus;
+    }
+
+    public Boolean getExitStatus() {
+        return exitStatus;
+    }
+
+    public void setExitStatus(Boolean exitStatus) {
+        this.exitStatus = exitStatus;
+    }
+
+    public void setNextLocationNode(LocationNode nextLocationNode) {
+        this.nextLocationNode = nextLocationNode;
+    }
+
+    public String getDistance() {
         return distance;
     }
 
-    public void setSourceLocation(LocationNode sourceLocation) {
-        this.sourceLocation = sourceLocation;
-    }
-
-    public void setDestLocation(LocationNode destLocation) {
-        this.destLocation = destLocation;
-    }
-
-    public void setDistance(Float distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 
@@ -44,20 +51,19 @@ public class Route {
         if (this == o) return true;
         if (!(o instanceof Route)) return false;
         Route route = (Route) o;
-        return Objects.equals(getSourceLocation(), route.getSourceLocation()) && Objects.equals(getDestLocation(),
-                route.getDestLocation()) && getDistance().equals(route.getDistance());
+        return Objects.equals(getNextLocationNode(), route.getNextLocationNode())
+                && getDistance().equals(route.getDistance());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSourceLocation(), getDestLocation(), getDistance());
+        return Objects.hash(getNextLocationNode(), getDistance());
     }
 
     @Override
     public String toString() {
         return "Route{" +
-                "locationNode1=" + sourceLocation +
-                ", locationNode2=" + destLocation +
+                "nextLocationNode=" + nextLocationNode +
                 ", distance=" + distance +
                 '}';
     }
