@@ -8,51 +8,44 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class JSONIterator {
-    private Map<Integer, Object> objMap;
+    private Map<Integer, Object> locationsMap;
 
     public JSONIterator() {
-        objMap = new TreeMap<>();
+        locationsMap = new TreeMap<>();
     }
 
-    public void iterateJSONObject(JSONObject jsonObj) {
+    public void parseJSONObject(JSONObject jsonObj) {
         Iterator<String> iterator = jsonObj.keySet().iterator();
         iterator.forEachRemaining(key -> {
-            Object value = jsonObj.get(key);
-            iterateValues(key, value);
+            parseValues(key, jsonObj.get(key));
         });
     }
 
-    private boolean isNumericKey(String key) {
-        if (key == null) return false;
-        try {
-            Integer nkey = Integer.parseInt(key);
-        } catch (NumberFormatException ex) {
-            return false;
-        }
-        return true;
-    }
-
-    private void iterateValues(String key, Object value) {
+    private void parseValues(String key, Object value) {
         if (value instanceof JSONArray) {
-            iterateJSONArray(key, (JSONArray) value);
+           
+            parseJSONArray(key, (JSONArray) value);
         } else if (value instanceof JSONObject) {
-            iterateJSONObject((JSONObject) value);
+            System.out.println(key+"\tparseValues "+value);
+            parseJSONObject((JSONObject) value);
         }
-        if (isNumericKey(key)) {
-            Integer nkey = Integer.parseInt(key);
-            System.out.println(value);
-            objMap.put(nkey, value);
+        try {
+            Integer locationId = Integer.parseInt(key);
+            locationsMap.put(locationId, value);
+        } catch (NumberFormatException ex) {
+            //ex.printStackTrace();
         }
     }
 
-    private void iterateJSONArray(String key, JSONArray jsonArray) {
+    private void parseJSONArray(String key, JSONArray jsonArray) {
         Iterator<Object> arrayIterator = jsonArray.iterator();
         arrayIterator.forEachRemaining(elem -> {
-            iterateValues(key, elem);
+            //System.out.println(key+"\tparseJSONArray "+elem);
+            parseValues(key, elem);
         });
     }
 
-    public Map<Integer, Object> getObjMap() {
-        return objMap;
+    public Map<Integer, Object> getLocationsMap() {
+        return locationsMap;
     }
 }

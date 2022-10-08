@@ -62,11 +62,11 @@ public class Main {
     private static void handle(JSONObject jsonObj, Object element) {
         Object ll = jsonObj.get(element);
         JSONIterator jsonIterater = new JSONIterator();
-        jsonIterater.iterateJSONObject(jsonObj);
-        Map<Integer, Object> hm = jsonIterater.getObjMap();
+        jsonIterater.parseJSONObject(jsonObj);
+        Map<Integer, Object> hm = jsonIterater.getLocationsMap();
         for (Integer key : hm.keySet()) {
 
-            //System.out.println(key + "\t" + hm.get(key));
+            //System.out.println(key + ": " + hm.get(key));
             Object value = hm.get(key);
         }
     }
