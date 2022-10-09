@@ -1,28 +1,28 @@
-package com.sas;
+package com.sas.model;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class LocationNode {
+public class LocationNode implements Comparable<LocationNode> {
     private String locationName;
     private Integer locationId;
     private String latitude;
     private String longitude;
-    private List<Route> routeList;
+    private Set<Route> routes;
 
-    public LocationNode(String locationName, Integer id, String latitude, String longitude) {
-        this.locationName = locationName;
-        this.locationId = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
 
-        routeList = new ArrayList<>();
+    public LocationNode() {
+        routes = new TreeSet<>();
     }
 
-    public List<Route> getRouteList() {
-        return routeList;
+    public Set<Route> getRoutes() {
+        return routes;
+    }
+
+    public void setRoutes(Set<Route> routes) {
+        this.routes = routes;
     }
 
     public String getLocationName() {
@@ -78,12 +78,19 @@ public class LocationNode {
     @Override
     public String toString() {
         String str = "";
-        str += "LocationNode{" +
-                "locationName='" + locationName + '\'' +
+        str += "\nLocationNode {" +
+                " locationId=" + locationId +
+                ", locationName='" + locationName + '\'' +
                 ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", locationId=" + locationId + "}";
-        return str;
+                ", longitude=" + longitude + "}";
+        for (Route rt : this.routes) {
+            str += rt.toString();
+        }
+        return str+"\n";
     }
 
+    @Override
+    public int compareTo(LocationNode locationNode) {
+        return this.locationId.compareTo(locationNode.locationId);
+    }
 }
