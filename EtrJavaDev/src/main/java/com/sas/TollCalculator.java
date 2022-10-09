@@ -13,8 +13,11 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Scanner;
 
 public class TollCalculator {
+    private static Map<Integer, Object> handlerLocationsMap;
+
     public static void main(String... args) throws URISyntaxException {
         readLocations(args);
     }
@@ -35,9 +38,32 @@ public class TollCalculator {
 
                 readJsonFile(paths.toFile());
             }
+            menuPrompt();
         } catch (Exception e) {
-            System.out.println("Program cannot be run with no args");
+
+            printout("Program cannot be run with no args");
         }
+    }
+
+    private static void menuPrompt() throws IOException {
+        long pid = 0l;
+        Scanner inputScanner=new Scanner(System.in);
+        while (true) {
+            printout("Please enter Trip start location & destination:\n(Comma Separated)");
+            String inputString = inputScanner.nextLine();
+            printout(inputString);
+            pid = checkpid();
+        }
+    }
+
+    private static long checkpid() throws IOException {
+        long pid = 0l;//process.pid();
+        Runtime.getRuntime().exec("kill " + pid);
+        return pid;
+    }
+
+    private static void printout(String string) {
+        System.out.println(string);
     }
 
     private static void readJsonFile(File file) {
@@ -46,7 +72,7 @@ public class TollCalculator {
             JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
 
             jsonObject.keySet().iterator().forEachRemaining(element -> {
-                handle(jsonObject, element);
+                handle(jsonObject);
             });
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -57,13 +83,11 @@ public class TollCalculator {
         }
     }
 
-    private static void handle(JSONObject jsonObj, Object element) {
-        Object elem = jsonObj.get(element);
+    private static void handle(JSONObject jsonObj) {
+        //
         JSONHandler jsonHandler = new JSONHandler();
         jsonHandler.parseJSONObject(jsonObj);
-        Map<Integer, Object> handlerLocationsMap = jsonHandler.getLocationsMap();
-
-        System.out.println(handlerLocationsMap);
+        handlerLocationsMap = jsonHandler.getLocationsMap();
     }
 
 }
