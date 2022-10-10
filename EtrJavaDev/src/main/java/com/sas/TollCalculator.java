@@ -1,6 +1,7 @@
 package com.sas;
 
 import com.sas.core.JSONHandler;
+import com.sas.core.TripToll;
 import com.sas.model.LocationNode;
 import com.sas.model.Route;
 import org.json.simple.JSONObject;
@@ -85,37 +86,39 @@ public class TollCalculator {
         }
     }
 
-    private static void onRampPrompt() {
+    private static void onRampPrompt() { tripToll = new TripToll();
         printout("\nType HWY Start: ");
         String startString = inputScanner.nextLine();
         Optional<String> locationOptional = getLocation(startString);
 
         if (locationOptional.isPresent()) {
-            setTollStart(locationOptional.get());
+           // setTollStart(locationOptional.get());
+            tripToll.setTollStart(locationOptional.get());
             nicePrintLocations();
             exitRampPrompt();
         }
     }
 
-    private static void setTollStart(String s) {
-      //  if (tripToll == null)
-       ///     tripToll = new TripToll();
-        TripToll.strStartNode=s;//setStrStartNode(s);
-    }
+//    private static void setTollStart(String s) {
+////        if (tripToll == null)
+////            TripToll tripToll = new TripToll();
+//        tripToll.setStrStartNode(s);
+//    }
 
-    private static void setTollEnd(String s) {
-//        if (tripToll != null) {
-//            tripToll.setStrEndNode(s);
-//        }
-        TripToll.strEndNode=s;
-    }
+//    private static void setTollEnd(String s) {
+////        if (tripToll != null) {
+////            tripToll.setStrEndNode(s);
+////        }
+//        tripToll.setStrStartNode(s);
+//    }
     private static void exitRampPrompt() {
         printout("\nType HWY Exit: ");
         String exitString = inputScanner.nextLine();
         Optional<String> locationOptional = getLocation(exitString);
 
         if (locationOptional.isPresent()) {
-            setTollEnd(locationOptional.get());
+         //   setTollEnd(locationOptional.get());
+            tripToll.setToolEnd(locationOptional.get());
             optionTollCompute();
         }
     }
@@ -153,15 +156,13 @@ public class TollCalculator {
         return sbuilder.toString();
     }
 
-
     private static void optionTollCompute() {
         System.out.println("ldkl: "  );
-
-        printout(Double.toString(TripToll.toll));
-        printout("\nToll Start:\t" + /*startLocationName*/TripToll.strStartNode/*getStartNodeId()*//*strStartNode*/);
-        printout("Toll Exit:\t" + TripToll.strEndNode+/*exitLocationName*/"tripToll.strEndNode");
-        printout("Distance:\t" + TripToll.distance/*distance*/);
-        printout("Cost:\t\t" + TripToll.toll/*toll*/);
+tripToll.setTollDistance(6.09d);
+       // printout(Double.toString(tripToll.toll));
+        printout("\ncostOfTrip(\'" + tripToll.getTollStart()+"\', \'"+ tripToll.getTollEnd()+"\')");
+        printout("Distance:\t" + tripToll.getTollDistance());
+        printout("Cost:\t" + tripToll.getTollCharge());
     }
 
     private static long checkpid() throws IOException {
@@ -204,79 +205,5 @@ public class TollCalculator {
         locations = jsonHandler.getLocationNodes();
     }
 
-     private static class TripToll {
-        private static final Double TOLL_RATE = 0.25d;
-        private static Long startNodeId;
-        private static  Long endNodeId;
-        private static String strStartNode;
-        private static String strEndNode;
-        private  static Double toll;
-        private  static Double distance;
-        private  static LocationNode startNode;
-        private  static LocationNode endNode;
 
-         public Double getToll() {
-             return toll;
-         }
-
-         public void setToll(Double toll) {
-             this.toll = toll;
-         }
-
-         public Double getDistance() {
-             return distance;
-         }
-
-         public void setDistance(Double distance) {
-             this.distance = distance;
-         }
-
-         public Long getStartNodeId() {
-             return startNodeId;
-         }
-
-         public void setStartNodeId(Long startNodeId) {
-             this.startNodeId = startNodeId;
-         }
-
-         public void setStrStartNode(String s) {
-            this.startNode = locations.stream()
-                    .filter(l -> l.getLocationName().equalsIgnoreCase(s)).findFirst().get();
-
-            computeToll();
-        }
-
-        public void setStrEndNode(String s) {
-            this.endNode = locations.stream()
-                    .filter(l -> l.getLocationName().equalsIgnoreCase(s)).findFirst().get();
-
-            computeToll();
-        }
-
-        private void computeToll() {
-            double dist = 0;
-            if (this.endNode != null && this.startNode != null) {
-                Long endId = this.endNode.getLocationId();
-                Long startId = this.startNode.getLocationId();
-
-                while (endId > startId) {
-
-                    Route vb = this.startNode.getRoutes().stream()
-                            .filter(n -> n.getToId() > this.startNode.getLocationId())
-                            .findFirst().get();
-
-                    dist += Double.parseDouble(vb.getDistance());
-                    startId = vb.getToId();
-                }
-                TripToll.this.setDistance(dist);//distance = dist;
-                TripToll.this.setToll(TOLL_RATE+6d);//this.toll = this.distance * TOLL_RATE;
-                if (endId == startId) {
-                    this.toll = 0.0d;
-                    this.distance = 0.d;
-                }
-            }
-        }
-
-
-    }
 }
