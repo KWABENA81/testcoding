@@ -6,9 +6,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JSONHandler {
-    private Map<Integer, Object> locationsMap;
+
+    private final Logger logger = Logger.getLogger(JSONHandler.class.getName());
+    private Map<Long, Object> locationsMap;
     private Set<LocationNode> locationNodes;
 
     /**
@@ -36,15 +40,15 @@ public class JSONHandler {
             parseJSONObject((JSONObject) value);
         }
         try {
-            Integer locationId = Integer.parseInt(key);
+            Long locationId = Long.parseLong(key);
             locationsMap.put(locationId, value);
             createObject(locationId, (JSONObject) value);
         } catch (NumberFormatException ex) {
-            //ex.printStackTrace();
+            logger.log(Level.INFO, "To handle Long primitives only");
         }
     }
 
-    private void createObject(Integer id, JSONObject value) {
+    private void createObject(Long id, JSONObject value) {
         LocationNode locationNode = new LocationNode();
         locationNode.setLocationId(id);
         locationNode.setLocationName((String) value.get("name"));
@@ -58,7 +62,7 @@ public class JSONHandler {
         }
     }
 
-    private void parseRouteJSONArray(Integer id, JSONArray routeArray) {
+    private void parseRouteJSONArray(Long id, JSONArray routeArray) {
         Iterator iterator = routeArray.iterator();
         while (iterator.hasNext()) {
 
@@ -93,7 +97,8 @@ public class JSONHandler {
     /**
      * @return
      */
-    public Map<Integer, Object> getLocationsMap() {
+    public Map<Long, Object> getLocationsMap() {
+
         return locationsMap;
     }
 
@@ -101,6 +106,7 @@ public class JSONHandler {
      * @return
      */
     public Set<LocationNode> getLocationNodes() {
+
         return locationNodes;
     }
 }

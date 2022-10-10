@@ -4,10 +4,12 @@ package com.sas.model;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 public class LocationNode implements Comparable<LocationNode> {
+    private final Logger logger = Logger.getLogger(LocationNode.class.getName());
     private String locationName;
-    private Integer locationId;
+    private Long locationId;
     private String latitude;
     private String longitude;
     private Set<Route> routes;
@@ -50,12 +52,12 @@ public class LocationNode implements Comparable<LocationNode> {
         this.longitude = longitude;
     }
 
-    public Integer getLocationId() {
+    public Long getLocationId() {
         return locationId;
     }
 
 
-    public void setLocationId(Integer locationId) {
+    public void setLocationId(Long locationId) {
         this.locationId = locationId;
     }
 
