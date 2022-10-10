@@ -93,12 +93,10 @@ public class JSONHandler {
         });
     }
 
-
     /**
      * @return
      */
     public Map<Long, Object> getLocationsMap() {
-
         return locationsMap;
     }
 
@@ -106,7 +104,6 @@ public class JSONHandler {
      * @return
      */
     public Set<LocationNode> getLocationNodes() {
-
         return locationNodes;
     }
 }

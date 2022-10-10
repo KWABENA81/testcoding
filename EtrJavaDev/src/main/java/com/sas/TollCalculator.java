@@ -3,7 +3,6 @@ package com.sas;
 import com.sas.core.JSONHandler;
 import com.sas.core.TripToll;
 import com.sas.model.LocationNode;
-import com.sas.model.Route;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -11,31 +10,33 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class TollCalculator {
-    private static Map<Long, Object> handlerLocationsMap;
+    private static final Logger logger = Logger.getLogger(TollCalculator.class.getName());
+    //  private static Map<Long, Object> handlerLocationsMap;
     private static Set<LocationNode> locations;
     private static Scanner inputScanner;
-    private static String exitLocationName;
-    private static String startLocationName;
+    //  private static String exitLocationName;
+    // private static String startLocationName;
     private static TripToll tripToll;
-    private static final Logger logger = Logger.getLogger(TollCalculator.class.getName());
 
-    public static void main(String... args) throws URISyntaxException, IOException {
+    public static void main(String... args) {
         readLocations(args);
         inputScanner = new Scanner(System.in);
         menuPrompt();
     }
 
-    private static void readLocations(String... args) throws URISyntaxException {
+    private static void readLocations(String... args) {
         try {
             boolean ideArgBool = false;
             if (args != null && !args[0].isEmpty()) {
@@ -45,26 +46,25 @@ public class TollCalculator {
             if (!ideArgBool) {
                 //  retrieve file from resource folder   
                 URL resource = TollCalculator.class.getClassLoader().getResource("interchanges.json");
-                Path paths = Paths.get(resource.toURI()).toAbsolutePath();
 
-                readJsonFile(paths.toFile());
+                if (resource != null) {
+                    Path paths = Paths.get(resource.toURI()).toAbsolutePath();
+                    readJsonFile(paths.toFile());
+                }
             }
         } catch (Exception e) {
             logger.log(Level.INFO, "Program cannot be run with no args");
         }
     }
 
-    private static void menuPrompt() throws IOException {
-        String str = "\n______________________\nToll calculator prompt.\n" +
-                "Select ..:\tO - (O)N Ramp:\tX - E(x)it Ramp:\tF - (F)inish: \n";
+    private static void menuPrompt() {
+        String str = "\n______________________\nToll Calculator prompt.\n" +
+                "Select:\tO - (O)N Ramp\tX - E(x)it Ramp\tE - (E)nd\n";
 
-        long pid = 0L;
-        String options = "Exit";
         String inputString = null;
+        boolean canProceed = true;
 
-        boolean canExit = !options.equalsIgnoreCase("EXIT");
-
-        while (!canExit) {
+        while (canProceed) {
             nicePrintLocations();
             printout(str);
             inputString = inputScanner.nextLine();
@@ -78,56 +78,37 @@ public class TollCalculator {
                 case "o":
                     onRampPrompt();
                     break;
-                case "F":
-                case "f":
+                case "E":
+                case "e":
+                    canProceed = false;
             }
-
-            canExit = false;
         }
     }
 
-    private static void onRampPrompt() { tripToll = new TripToll();
-        printout("\nType HWY Start: ");
+    private static void onRampPrompt() {
+        tripToll = new TripToll();
+        printout("\nProvide Highway Start: ");
         String startString = inputScanner.nextLine();
-        Optional<String> locationOptional = getLocation(startString);
+        String startLocation = getLocation(startString);
 
-        if (locationOptional.isPresent()) {
-           // setTollStart(locationOptional.get());
-            tripToll.setTollStart(locationOptional.get());
-            nicePrintLocations();
-            exitRampPrompt();
-        }
+        tripToll.setTollStart(startLocation);
+        nicePrintLocations();
+        exitRampPrompt();
     }
 
-//    private static void setTollStart(String s) {
-////        if (tripToll == null)
-////            TripToll tripToll = new TripToll();
-//        tripToll.setStrStartNode(s);
-//    }
-
-//    private static void setTollEnd(String s) {
-////        if (tripToll != null) {
-////            tripToll.setStrEndNode(s);
-////        }
-//        tripToll.setStrStartNode(s);
-//    }
     private static void exitRampPrompt() {
-        printout("\nType HWY Exit: ");
+        printout("\nProvide Highway Exit: ");
         String exitString = inputScanner.nextLine();
-        Optional<String> locationOptional = getLocation(exitString);
+        String exitLocation = getLocation(exitString);
 
-        if (locationOptional.isPresent()) {
-         //   setTollEnd(locationOptional.get());
-            tripToll.setToolEnd(locationOptional.get());
-            optionTollCompute();
-        }
+        tripToll.setToolEnd(exitLocation);
+        optionTollCompute();
     }
 
-
-    private static Optional<String> getLocation(String string) {
-        Optional<String> optional = locations.stream().map(l -> l.getLocationName())
-                .filter(s -> s.equalsIgnoreCase(string)).findFirst();
-        return optional;
+    private static String getLocation(String string) {
+        String location = locations.stream().map(l -> l.getLocationName())
+                .filter(s -> s.equalsIgnoreCase(string)).findFirst().get();
+        return location;
     }
 
     private static void nicePrintLocations() {
@@ -140,7 +121,7 @@ public class TollCalculator {
         for (String name : namesList) {
             counter += 1;
             strNames += patchString(name);
-            if (counter % 7 == 0) {
+            if (counter % 9 == 0) {
                 strNames += "\n";
             }
         }
@@ -148,27 +129,19 @@ public class TollCalculator {
     }
 
     private static String patchString(String name) {
-        int strLength = 25;
-        StringBuilder sbuilder = new StringBuilder(name);
-        while ((sbuilder.length() < strLength)) {
-            sbuilder.append(" ");
+        int strLength = 21;
+        StringBuilder stringBuilder = new StringBuilder(name);
+        while ((stringBuilder.length() < strLength)) {
+            stringBuilder.append(" ");
         }
-        return sbuilder.toString();
+        return stringBuilder.toString();
     }
 
     private static void optionTollCompute() {
-        System.out.println("ldkl: "  );
-tripToll.setTollDistance(6.09d);
-       // printout(Double.toString(tripToll.toll));
-        printout("\ncostOfTrip(\'" + tripToll.getTollStart()+"\', \'"+ tripToll.getTollEnd()+"\')");
+        printout("\ncostOfTrip(\'" + tripToll.getTollStart()
+                + "\', \'" + tripToll.getTollEnd() + "\')");
         printout("Distance:\t" + tripToll.getTollDistance());
         printout("Cost:\t" + tripToll.getTollCharge());
-    }
-
-    private static long checkpid() throws IOException {
-        long pid = 0L;//process.pid();
-        Runtime.getRuntime().exec("kill " + pid);
-        return pid;
     }
 
     private static void printout(String string) {
@@ -176,7 +149,7 @@ tripToll.setTollDistance(6.09d);
     }
 
     private static boolean readJsonFile(File file) {
-        boolean boolHandled = false;
+        boolean boolReadFile = false;
         try (FileReader reader = new FileReader(file)) {
             org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
@@ -184,26 +157,22 @@ tripToll.setTollDistance(6.09d);
             jsonObject.keySet().iterator().forEachRemaining(element -> {
                 handle(jsonObject);
             });
-            boolHandled = true;
+            boolReadFile = true;
         } catch (FileNotFoundException e) {
-            logger.log(Level.INFO, "FileNotFoundException " + e.getMessage());
-            e.printStackTrace();
+            logger.log(Level.INFO, "File Not Found Exception " + e.getMessage());
         } catch (IOException e) {
             logger.log(Level.INFO, "IOException " + e.getMessage());
-            e.printStackTrace();
         } catch (ParseException e) {
             logger.log(Level.INFO, "ParseException " + e.getMessage());
         }
-        return boolHandled;
+        return boolReadFile;
     }
 
     private static void handle(JSONObject jsonObj) {
-        //
         JSONHandler jsonHandler = new JSONHandler();
         jsonHandler.parseJSONObject(jsonObj);
-        handlerLocationsMap = jsonHandler.getLocationsMap();
+        //  handlerLocationsMap = jsonHandler.getLocationsMap();
         locations = jsonHandler.getLocationNodes();
     }
-
 
 }
