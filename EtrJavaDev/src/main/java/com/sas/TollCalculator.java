@@ -18,8 +18,11 @@ import java.util.Scanner;
 public class TollCalculator {
     private static Map<Integer, Object> handlerLocationsMap;
 
-    public static void main(String... args) throws URISyntaxException {
+    public static void main(String... args) throws URISyntaxException, IOException {
         readLocations(args);
+        String str = "Please enter Trip start location & destination:\n(Comma Separated)";
+
+        menuPrompt(str);
     }
 
     private static void readLocations(String... args) throws URISyntaxException {
@@ -28,31 +31,37 @@ public class TollCalculator {
             if (args != null && !args[0].isEmpty()) {
                 //  retrieve file from project root folder
                 readJsonFile(new File(args[0]));
-
                 ideArgBool = true;
             }
             if (!ideArgBool) {
-                //  retrieve file from resource folder                readJSON();
+                //  retrieve file from resource folder   
                 URL resource = TollCalculator.class.getClassLoader().getResource("interchanges.json");
                 Path paths = Paths.get(resource.toURI()).toAbsolutePath();
 
                 readJsonFile(paths.toFile());
             }
-            menuPrompt();
         } catch (Exception e) {
-
             printout("Program cannot be run with no args");
         }
     }
 
-    private static void menuPrompt() throws IOException {
+    private static void menuPrompt(String str) throws IOException {
         long pid = 0l;
-        Scanner inputScanner=new Scanner(System.in);
-        while (true) {
-            printout("Please enter Trip start location & destination:\n(Comma Separated)");
-            String inputString = inputScanner.nextLine();
-            printout(inputString);
-            pid = checkpid();
+        String inputString = null;
+        Scanner inputScanner = null;
+        try {
+            inputScanner = new Scanner(System.in);
+            boolean canProceed = true;
+            while (canProceed) {
+                printout(str);
+                inputString = inputScanner.nextLine();
+                printout(inputString);
+                pid = checkpid();
+                
+                canProceed = false;
+            }
+        } catch (IOException e) {
+
         }
     }
 
