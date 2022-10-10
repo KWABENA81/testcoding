@@ -7,13 +7,11 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 public class LocationNode implements Comparable<LocationNode> {
-    private final Logger logger = Logger.getLogger(LocationNode.class.getName());
     private String locationName;
     private Long locationId;
     private String latitude;
     private String longitude;
     private Set<Route> routes;
-
 
     public LocationNode() {
         routes = new TreeSet<>();
@@ -43,7 +41,6 @@ public class LocationNode implements Comparable<LocationNode> {
         this.latitude = latitude;
     }
 
-
     public String getLongitude() {
         return longitude;
     }
@@ -53,9 +50,8 @@ public class LocationNode implements Comparable<LocationNode> {
     }
 
     public Long getLocationId() {
-        return locationId;
+                return locationId;
     }
-
 
     public void setLocationId(Long locationId) {
         this.locationId = locationId;
@@ -88,7 +84,7 @@ public class LocationNode implements Comparable<LocationNode> {
         for (Route rt : this.routes) {
             str += rt.toString();
         }
-        return str+"\n";
+        return str + "\n";
     }
 
     @Override

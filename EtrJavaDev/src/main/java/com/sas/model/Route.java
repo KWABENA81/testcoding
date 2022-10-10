@@ -1,12 +1,9 @@
 package com.sas.model;
 
-import com.sas.TollCalculator;
-
 import java.util.Objects;
 import java.util.logging.Logger;
 
 public class Route implements Comparable<Route> {
-    private final Logger logger = Logger.getLogger(Route.class.getName());
     private Long toId;
     private String distance;
 

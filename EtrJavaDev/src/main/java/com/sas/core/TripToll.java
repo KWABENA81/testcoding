@@ -7,11 +7,11 @@ public class TripToll {
     private double tollDistance;
     private double tollCharge;
 
-    public void setStrStartNode(String s) {
-    }
-
-    public void setEndNode(String s) {
-    }
+//    public void setStrStartNode(String s) {
+//    }
+//
+//    public void setEndNode(String s) {
+//    }
 
     public String getTollStart() {
         return tollStart;
