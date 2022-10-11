@@ -6,6 +6,7 @@ import com.sas.model.LocationNode;
 import com.sas.model.Route;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,17 +36,21 @@ public class TollCalculator {
         boolean ideArgBool = false;
 
         try {
-            String fn = args[0];
-            if (fn != null) {
-                //  retrieve file from project root folder
-                ideArgBool = readJsonFile(new File(fn));
+            String filename = null;
+            if (args[0] == null && args == null) {
+                filename = "..\\..\\interchanges.json";
+            } else {
+                filename = "interchanges.json";
             }
+
+            ideArgBool = readJsonFile(new File(filename));
+
         } catch (Exception e) {
             logger.log(Level.INFO, "Program cannot be run with no args");
         }
         try {
             if (!ideArgBool) {
-                //  retrieve file from resource folder   
+                //  retrieve file from resource folder
                 URL resource = TollCalculator.class.getClassLoader().getResource("interchanges.json");
 
                 if (resource != null) {
