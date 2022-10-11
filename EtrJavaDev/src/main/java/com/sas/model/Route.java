@@ -4,8 +4,11 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 public class Route implements Comparable<Route> {
+    public static  String UP = "UP";
+    public static  String DOWN = "DOWN";
     private Long toId;
     private String distance;
+    private String designation;
 
     public Route(Long toId, String distance) {
         this.toId = toId;
