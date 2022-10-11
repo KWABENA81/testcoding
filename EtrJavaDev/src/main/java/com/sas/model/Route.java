@@ -1,19 +1,10 @@
 package com.sas.model;
 
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public class Route implements Comparable<Route> {
     private Long toId;
     private String distance;
-
-    public Route(Long toId, String distance) {
-        this.toId = toId;
-        this.distance = distance;
-    }
-
-    public Route() {
-    }
 
     public Long getToId() {
         return toId;

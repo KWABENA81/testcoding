@@ -1,36 +1,38 @@
 package com.sas.core;
 
+import com.sas.model.LocationNode;
+
+import java.text.DecimalFormat;
+import java.util.Currency;
+import java.util.Locale;
+
 public class TripToll {
-    static Double TOLL_RATE = 0.25d;
-    private String tollStart;
-    private String tollEnd;
+    private static final DecimalFormat chargeDecimalFormat = new DecimalFormat("0.00");
+    private static final DecimalFormat distanceDecimalFormat = new DecimalFormat("0.000");
+    private static final Double TOLL_RATE = 0.25d;
+    private LocationNode tollStartNode;
+    private LocationNode tollEndNode;
     private double tollDistance;
     private double tollCharge;
 
-//    public void setStrStartNode(String s) {
-//    }
-//
-//    public void setEndNode(String s) {
-//    }
-
-    public String getTollStart() {
-        return tollStart;
+    public LocationNode getTollStartNode() {
+        return tollStartNode;
     }
 
-    public void setTollStart(String tollStart) {
-        this.tollStart = tollStart;
+    public void setTollStartNode(LocationNode tollStart) {
+        this.tollStartNode = tollStart;
     }
 
-    public void setToolEnd(String tollEnd) {
-        this.tollEnd = tollEnd;
+    public void setToolEndNode(LocationNode tollEnd) {
+        this.tollEndNode = tollEnd;
     }
 
-    public String getTollEnd() {
-        return tollEnd;
+    public LocationNode getTollEndNode() {
+        return tollEndNode;
     }
 
     public String getTollDistance() {
-        return Double.toString(tollDistance);
+        return distanceDecimalFormat.format(tollDistance);
     }
 
     public void setTollDistance(Double distance) {
@@ -39,7 +41,8 @@ public class TripToll {
     }
 
     public String getTollCharge() {
-        return Double.toString(tollCharge);
+        chargeDecimalFormat.setCurrency(Currency.getInstance(Locale.CANADA));
+        return chargeDecimalFormat.format(tollCharge);
     }
 
     public void setTollCharge(String tollCharge) {
