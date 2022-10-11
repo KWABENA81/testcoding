@@ -12,20 +12,10 @@ import java.util.logging.Logger;
 public class JSONHandler {
 
     private final Logger logger = Logger.getLogger(JSONHandler.class.getName());
-    private Map<Long, Object> locationsMap;
-    private Set<LocationNode> locationNodes;
+    private final Map<Long, Object> locationsMap = new TreeMap<>();
+    private final Set<LocationNode> locationNodes = new TreeSet<>();
 
-    /**
-     * Constructor
-     */
-    public JSONHandler() {
-        locationsMap = new TreeMap<>();
-        locationNodes = new TreeSet<>();
-    }
 
-    /**
-     * @param jsonObj
-     */
     public void parseJSONObject(JSONObject jsonObj) {
         Iterator<String> iterator = jsonObj.keySet().iterator();
         iterator.forEachRemaining(key -> {
@@ -42,23 +32,27 @@ public class JSONHandler {
         try {
             Long locationId = Long.parseLong(key);
             locationsMap.put(locationId, value);
-            createObject(locationId, (JSONObject) value);
+
+            createObject(locationId, value);
         } catch (NumberFormatException ex) {
             logger.log(Level.INFO, "To handle Long primitives only");
         }
     }
 
-    private void createObject(Long id, JSONObject value) {
-        LocationNode locationNode = new LocationNode();
-        locationNode.setLocationId(id);
-        locationNode.setLocationName((String) value.get("name"));
-        locationNode.setLatitude(Double.toString((Double) value.get("lat")));
-        locationNode.setLongitude(Double.toString((Double) value.get("lng")));
+    private void createObject(Long id, Object value0) {
+        if (value0 instanceof JSONObject) {
+            JSONObject value = (JSONObject) value0;
+            LocationNode locationNode = new LocationNode();
+            locationNode.setLocationId(id);
+            locationNode.setLocationName((String) value.get("name"));
+            locationNode.setLatitude(Double.toString((Double) value.get("lat")));
+            locationNode.setLongitude(Double.toString((Double) value.get("lng")));
 
-        locationNodes.add(locationNode);
-        Object routeMap = value.get("routes");
-        if (routeMap instanceof JSONArray) {
-            parseRouteJSONArray(id, (JSONArray) routeMap);
+            locationNodes.add(locationNode);
+            Object routeMap = value.get("routes");
+            if (routeMap instanceof JSONArray) {
+                parseRouteJSONArray(id, (JSONArray) routeMap);
+            }
         }
     }
 
@@ -66,21 +60,23 @@ public class JSONHandler {
         Iterator iterator = routeArray.iterator();
         while (iterator.hasNext()) {
 
-            Object me = iterator.next();
-            if (me instanceof JSONObject) {
+            Object jsonObj = iterator.next();
+            if (jsonObj instanceof JSONObject) {
                 Route route = new Route();
 
-                Object toId = ((JSONObject) me).get("toId");
-                Long lg = (toId instanceof Long) ? (Long) toId : 0l;
+                Object toId = ((JSONObject) jsonObj).get("toId");
                 route.setToId((Long) toId);
 
-                Object distance = ((JSONObject) me).get("distance");
-                Double dist = (distance instanceof Double) ? (Double) distance : 0.d;
+                Object distance = ((JSONObject) jsonObj).get("distance");
+                double dist = (distance instanceof Double) ? (Double) distance : 0.d;
                 route.setDistance(Double.toString(dist));
 
-                LocationNode locNode = locationNodes.stream().
-                        filter(x -> x.getLocationId().equals(id)).findFirst().get();
-                locNode.getRoutes().add(route);
+                Optional<LocationNode> locNodeOptional = locationNodes.stream().
+                        filter(x -> x.getLocationId().equals(id)).findFirst();
+                if (locNodeOptional.isPresent()) {
+                    LocationNode locNode = locNodeOptional.get();
+                    locNode.getRoutes().add(route);
+                }
             }
         }
     }
@@ -93,16 +89,6 @@ public class JSONHandler {
         });
     }
 
-    /**
-     * @return
-     */
-    public Map<Long, Object> getLocationsMap() {
-        return locationsMap;
-    }
-
-    /**
-     * @return
-     */
     public Set<LocationNode> getLocationNodes() {
         return locationNodes;
     }

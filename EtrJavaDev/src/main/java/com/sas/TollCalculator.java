@@ -5,7 +5,7 @@ import com.sas.core.TripToll;
 import com.sas.model.LocationNode;
 import com.sas.model.Route;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,13 +32,19 @@ public class TollCalculator {
         menuPrompt();
     }
 
-    private static void readLocations(String... args) {
+    private static void readLocations(String[] args) {
+        boolean ideArgBool = false;
+
         try {
-            boolean ideArgBool = false;
-            if (args != null && !args[0].isEmpty()) {
+            String fn = args[0];
+            if (fn != null) {
                 //  retrieve file from project root folder
-                ideArgBool = readJsonFile(new File(args[0]));
+                ideArgBool = readJsonFile(new File(fn));
             }
+        } catch (Exception e) {
+            logger.log(Level.INFO, "Program cannot be run with no args");
+        }
+        try {
             if (!ideArgBool) {
                 //  retrieve file from resource folder   
                 URL resource = TollCalculator.class.getClassLoader().getResource("interchanges.json");
@@ -48,20 +55,20 @@ public class TollCalculator {
                 }
             }
         } catch (Exception e) {
-            logger.log(Level.INFO, "Program cannot be run with no args");
+            logger.log(Level.INFO, "Program arg from resource failed");
         }
     }
 
     private static void menuPrompt() {
-        String str = "\n______________________\n";
-        str += "Toll Calculator prompt.\n";
-        str += "Select:\tS - (S)tart, \tX - E(x)it Program\n";
+        String str = "\n_____________________________\n";
+        str += "ETR Toll prompt.  Select one:\n";
+        str += "S - Start trip, \tX - Exit Program";
 
-        String inputString = null;
+        String inputString;
         boolean canProceed = true;
 
         while (canProceed) {
-            nicePrintLocations();
+            locationDisplay();
             System.out.println(str);
             inputString = inputScanner.nextLine();
 
@@ -72,6 +79,8 @@ public class TollCalculator {
                     break;
                 case "X":
                 case "x":
+                case "E":
+                case "e":
                     canProceed = false;
             }
         }
@@ -85,10 +94,10 @@ public class TollCalculator {
             LocationNode startLocation = getLocation(startString);
 
             tripToll.setTollStartNode(startLocation);
-            nicePrintLocations();
+            locationDisplay();
             exitRampPrompt();
         } catch (Exception e) {
-            logger.log(Level.INFO, "Exception " + e.getMessage());
+            logger.log(Level.INFO, "Exception " + e.getMessage() + "\nPress ENTER to proceed");
         }
     }
 
@@ -101,12 +110,12 @@ public class TollCalculator {
             tripToll.setToolEndNode(exitLocation);
             tollCompute();
         } catch (Exception e) {
-            logger.log(Level.INFO, "Exception " + e.getMessage());
+            logger.log(Level.INFO, "Exception " + e.getMessage() + "\nPress ENTER to proceed");
         }
     }
 
     private static LocationNode getLocation(String string) {
-        Optional<LocationNode> optionalLocation = locations.stream()//.map(l -> l.getLocationName())
+        Optional<LocationNode> optionalLocation = locations.stream()
                 .filter(l -> l.getLocationName().equalsIgnoreCase(string)).findFirst();
         LocationNode location = null;
         if (optionalLocation.isPresent()) {
@@ -115,21 +124,23 @@ public class TollCalculator {
         return location;
     }
 
-    private static void nicePrintLocations() {
+    private static void locationDisplay() {
         if (locations == null) return;
         List<String> namesList = locations.stream().map(l -> l.getLocationName())
                 .sorted(Comparator.naturalOrder()).collect(Collectors.toList());
 
         int counter = 0;
-        String strNames = "\nETR 407 ramp names\n---------------------\n";
+        StringBuilder sbuilder = new StringBuilder();
+        sbuilder.append("\nETR 407 ramp names");
+        sbuilder.append("\n------------------\n");
         for (String name : namesList) {
             counter += 1;
-            strNames += patchString(name);
+            sbuilder.append(patchString(name));
             if (counter % 9 == 0) {
-                strNames += "\n";
+                sbuilder.append("\n");
             }
         }
-        System.out.println(strNames);
+        System.out.println(sbuilder);
     }
 
     private static String patchString(String name) {
@@ -144,12 +155,12 @@ public class TollCalculator {
     private static void tollCompute() {
         tollCompute(tripToll.getTollStartNode(), tripToll.getTollEndNode());
 
-        String string = "\ncostOfTrip (\'";
+        String string = "\ncostOfTrip ('";
         string += tripToll.getTollStartNode().getLocationName();
-        string += "\', \'";
+        string += "', '";
         string += tripToll.getTollEndNode().getLocationName();
 
-        string += "\')\nDistance:\t";
+        string += "')\nDistance:\t";
         string += tripToll.getTollDistance();
         string += "km\nCost:\t\t$";
         string += tripToll.getTollCharge();
@@ -157,59 +168,72 @@ public class TollCalculator {
     }
 
     private static void tollCompute(LocationNode startNode, LocationNode endNode) {
-        double charge = 0;
-        double distance = 0d;
-        Set<Route> startRoutes = startNode.getRoutes();
-        Set<Route> endRoutes = endNode.getRoutes();
-        LocationNode currentNode = startNode;
         if (startNode.getLocationId() > endNode.getLocationId()) {
-            printout(startRoutes.isEmpty() + " 170---------");
-            printout(endRoutes.toString() + " t171");
-            while (!currentNode.equals(endNode)) {
-                long currentId_Final = currentNode.getLocationId();
-
-                //  get next id node
-                Route nextRoute = currentNode.getRoutes().stream()
-                        .filter(next -> next.getToId() > currentId_Final).findFirst().get();
-                distance += Double.parseDouble(nextRoute.getDistance());
-
-                //  hop into the next node retrieved above
-                currentNode = locations.stream()
-                        .filter(n -> n.getLocationId().equals(nextRoute.getToId())).findFirst().get();
-            }
-            tripToll.setTollDistance(distance);
+            tollComputeDown(startNode, endNode);
         }
         if (startNode.getLocationId() < endNode.getLocationId()) {
-            while (!currentNode.equals(endNode)) {
-                long currentId_Final = currentNode.getLocationId();
-
-                //  get next id node
-                Route nextRoute = null;
-                Optional<Route> nextRouteOptional = currentNode.getRoutes().stream()
-                        .filter(next -> next.getToId() > currentId_Final).findFirst();
-
-                if (nextRouteOptional.isPresent()) {
-                    nextRoute = nextRouteOptional.get();
-                    distance += Double.parseDouble(nextRoute.getDistance());
-
-                    //  hop into the next node retrieved above
-                    long nextRouteId = nextRoute.getToId();
-                    currentNode = locations.stream()
-                            .filter(n -> n.getLocationId().equals(nextRouteId)).findFirst().get();
-                }
-            }
-            tripToll.setTollDistance(distance);
+            tollComputeUp(startNode, endNode);
         }
     }
 
-    private static void printout(String string) {
-        System.out.println(string);
+    private static void tollComputeDown(LocationNode startNode, LocationNode endNode) {
+        LocationNode currentNode = startNode;
+        double distance = 0.;
+        while (currentNode.getLocationId() > endNode.getLocationId()) {
+            long currentId_Final = currentNode.getLocationId();
+
+            //  get next id node
+            Route nextRoute;
+            Optional<Route> nextRouteOptional = currentNode.getRoutes().stream()
+                    .filter(next -> next.getToId() < currentId_Final).findFirst();
+
+            if (nextRouteOptional.isPresent()) {
+                nextRoute = nextRouteOptional.get();
+                distance += Double.parseDouble(nextRoute.getDistance());
+
+                //  hop into the next node retrieved above
+                long nextRouteId = nextRoute.getToId();
+                Optional<LocationNode> optionalNode = locations.stream()
+                        .filter(n -> n.getLocationId().equals(nextRouteId)).findFirst();
+                if (optionalNode.isPresent()) {
+                    currentNode = optionalNode.get();
+                }
+            }
+        }
+        tripToll.setTollDistance(distance);
+    }
+
+    private static void tollComputeUp(LocationNode startNode, LocationNode endNode) {
+        LocationNode currentNode = startNode;
+        double distance = 0.;
+        while (!currentNode.equals(endNode)) {
+            long currentId_Final = currentNode.getLocationId();
+
+            //  get next id node
+            Route nextRoute;
+            Optional<Route> nextRouteOptional = currentNode.getRoutes().stream()
+                    .filter(next -> next.getToId() > currentId_Final).findFirst();
+
+            if (nextRouteOptional.isPresent()) {
+                nextRoute = nextRouteOptional.get();
+                distance += Double.parseDouble(nextRoute.getDistance());
+
+                //  hop into the next node retrieved above
+                long nextRouteId = nextRoute.getToId();
+                Optional<LocationNode> optionalNode = locations.stream()
+                        .filter(n -> n.getLocationId().equals(nextRouteId)).findFirst();
+                if (optionalNode.isPresent()) {
+                    currentNode = optionalNode.get();
+                }
+            }
+        }
+        tripToll.setTollDistance(distance);
     }
 
     private static boolean readJsonFile(File file) {
         boolean boolReadFile = false;
         try (FileReader reader = new FileReader(file)) {
-            org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
+            JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
 
             jsonObject.keySet().iterator().forEachRemaining(element -> {
@@ -220,8 +244,8 @@ public class TollCalculator {
             logger.log(Level.INFO, "File Not Found Exception " + e.getMessage());
         } catch (IOException e) {
             logger.log(Level.INFO, "IOException " + e.getMessage());
-        } catch (ParseException e) {
-            logger.log(Level.INFO, "ParseException " + e.getMessage());
+        } catch (org.json.simple.parser.ParseException e) {
+            logger.log(Level.INFO, "org.json.simple.parser.ParseException " + e.getMessage());
         }
         return boolReadFile;
     }
