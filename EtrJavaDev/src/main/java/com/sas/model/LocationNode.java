@@ -4,25 +4,20 @@ package com.sas.model;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 
 public class LocationNode implements Comparable<LocationNode> {
+    private final Set<Route> routes = new TreeSet<>();
     private String locationName;
     private Long locationId;
     private String latitude;
     private String longitude;
-    private Set<Route> routes;
 
     public LocationNode() {
-        routes = new TreeSet<>();
+
     }
 
     public Set<Route> getRoutes() {
         return routes;
-    }
-
-    public void setRoutes(Set<Route> routes) {
-        this.routes = routes;
     }
 
     public String getLocationName() {
@@ -50,7 +45,7 @@ public class LocationNode implements Comparable<LocationNode> {
     }
 
     public Long getLocationId() {
-                return locationId;
+        return locationId;
     }
 
     public void setLocationId(Long locationId) {
@@ -75,16 +70,22 @@ public class LocationNode implements Comparable<LocationNode> {
 
     @Override
     public String toString() {
-        String str = "";
-        str += "\nLocationNode {" +
-                " locationId=" + locationId +
-                ", locationName='" + locationName + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude + "}";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\nLocationNode {");
+        stringBuilder.append(" locationId=");
+        stringBuilder.append(locationId);
+        stringBuilder.append(", locationName='");
+        stringBuilder.append(locationName);
+        stringBuilder.append('\'');
+        stringBuilder.append(", latitude=");
+        stringBuilder.append(latitude);
+        stringBuilder.append(", longitude=");
+        stringBuilder.append(longitude);
+        stringBuilder.append("}");
         for (Route rt : this.routes) {
-            str += rt.toString();
+            stringBuilder.append(rt.toString());
         }
-        return str + "\n";
+        return stringBuilder.toString();
     }
 
     @Override
