@@ -6,7 +6,6 @@ import com.sas.model.LocationNode;
 import com.sas.model.Route;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,15 +33,13 @@ public class TollCalculator {
 
     private static void readLocations(String[] args) {
         boolean ideArgBool = false;
-
         try {
-            String filename = null;
-            if (args[0] == null && args == null) {
-                filename = "..\\..\\interchanges.json";
+            String filename;
+            if (args.length != 0) {
+                filename = args[0];
             } else {
-                filename = "interchanges.json";
+                filename = "..\\..\\interchanges.json";
             }
-
             ideArgBool = readJsonFile(new File(filename));
 
         } catch (Exception e) {
