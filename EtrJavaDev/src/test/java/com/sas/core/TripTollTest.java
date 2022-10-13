@@ -1,21 +1,14 @@
-package com.sas;
-
+package com.sas.core;
 
 import org.testng.annotations.Test;
 
-@Test
-public class TollCalculatorTest {
+public class TripTollTest {
     @Test
     void setup() {
         //  read json file
-        //  read json file        readJson();
+        //  read json file
         System.out.println("Inside setup");
     }
-
-//    @Test
-//    void readJson() {
-//
-//    }
 
     @Test
     void testSteps() {
@@ -26,5 +19,4 @@ public class TollCalculatorTest {
     void tearDown() {
         System.out.println("Inside TearDown");
     }
-
 }
