@@ -1,5 +1,5 @@
-com\sas\model\LocationNode.class
-com\sas\TollCalculator.class
-com\sas\core\TripToll.class
-com\sas\core\JSONHandler.class
-com\sas\model\Route.class
+com/sas/core/TripToll.class
+com/sas/core/JSONHandler.class
+com/sas/model/Route.class
+com/sas/model/LocationNode.class
+com/sas/TollCalculator.class
