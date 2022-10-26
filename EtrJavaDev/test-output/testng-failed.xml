@@ -8,6 +8,7 @@
           <include name="teardown"/>
           <include name="testTollCharges"/>
           <include name="setup"/>
+          <include name="testTollCharges1"/>
         </methods>
       </class> <!-- com.sas.core.TripTollTest -->
     </classes>

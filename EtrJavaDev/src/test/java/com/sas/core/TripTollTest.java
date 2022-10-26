@@ -9,6 +9,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,83 +19,73 @@ import org.testng.Reporter;
 public class TripTollTest {
 
 	private TripToll tripToll;
-	private List<LocationNode> locationNodes;
 
-	@Test(dataProvider = "dataProvider_TripStartEndPoints")
-	public void f(String startNode, String endNode) {
+	@Test(dataProvider = "getTestData")
+	public void tollQEWto410(String startNode, String endNode) {
 		LocationNode location0 = TollCalculator.getLocation(startNode);
-		locationNodes.add(0, location0);
 
 		LocationNode location1 = TollCalculator.getLocation(endNode);
-		locationNodes.add(1, location1);
-
-//		// Validate Hwy entrance ID
-//		Long nodeID0 = location0.getLocationId();
-//		Assert.assertEquals(result, nodeID0, "Test - Validate Ramp Name matches "+id);
+		testTollCharges(location0, location1);
 	}
 
-	@DataProvider(name = "dataProvider_TripStartEndPoints")
-	public Object[][] dataProvider_TripEndPoints() {
-		Object[][] objArray = new Object[][] { { "QEW", "Highway 410" }, { "QEW", "Highway 403" } };
-		return objArray;
+	@Test(dataProvider = "getTestData")
+	public void tollQEWto403(String startNode, String endNode) {
+		LocationNode location0 = TollCalculator.getLocation(startNode);
+
+		LocationNode location1 = TollCalculator.getLocation(endNode);
+		testTollCharges(location0, location1);
+	}
+
+	@DataProvider(name = "getTestData")
+	public Object[][] getTestData(Method method) {
+		
+		Object[][] objArrayQEW_HWY410 = new Object[][] { { "QEW", "Highway 410" } };
+		Object[][] objArrayQEW_HWY403 = new Object[][] { { "QEW", "Highway 403" } };
+
+		String methodName = method.getName();
+		if (methodName.equals("tollQEWto403")) {
+			return objArrayQEW_HWY403;
+		} //
+		else if (methodName.equals("tollQEWto410")) {
+			return objArrayQEW_HWY410;
+		} //
+		else {
+			return new Object[][] { { "No Test Data for Start" }, { "No Test Data for End" } };
+		}
+
 	}
 
 	@BeforeClass
 	public void setup() {
 		TollCalculator.readLocations(null);
 		tripToll = new TripToll();
-		locationNodes = new ArrayList<>(2);
 	}
 
-	@Test(priority=0)
-	public void testTollCharges() {
-		tripToll.setTollStartNode(locationNodes.get(0));
-		tripToll.setToolEndNode(locationNodes.get(1));
-
-		tripToll.setTripPoints(tripToll);		
-		
-		Reporter.log( "Test - Distances between QEW -\n " + tripToll.getTollStartNode()+"\n"+tripToll.getTollEndNode());
 	
+	private void testTollCharges(LocationNode location0, LocationNode location1) {
+		tripToll.setTollStartNode(location0);
+		tripToll.setToolEndNode(location1);
+
+		tripToll.setTripPoints(tripToll);
+
+		Reporter.log(
+				"Test - Distances between QEW -\n " + tripToll.getTollStartNode() + "\n" + tripToll.getTollEndNode());
 
 		if (tripToll.getTollEndNode().equals("Highway 403")) {
 			Assert.assertEquals(tripToll.getTollDistance(), "25.133", "Test - Distance between QEW - " + "Highway 403");
-			Reporter.log( "Test - Distances is: "+tripToll.getTollDistance());
-			
-			Reporter.log( "Test - Distance between QEW - " + "Highway 403");
+			Reporter.log("Test - Distances is: " + tripToll.getTollDistance());
+
+			Reporter.log("Test - Distance between QEW - " + "Highway 403");
 			Assert.assertEquals(tripToll.getTollCharge(), "6.28", "Test - Toll between QEW - " + "Highway 403");
-			Reporter.log( "Test - Toll is: "+tripToll.getTollCharge());
-		}
-
-	}
-	
-	@Test(priority=1)
-	public void testTollCharges1() {
-		tripToll.setTollStartNode(locationNodes.get(0));
-		tripToll.setToolEndNode(locationNodes.get(1));
-
-		tripToll.setTripPoints(tripToll);		
-		
-		Reporter.log( "Test - Distances between QEW -\n " + tripToll.getTollStartNode()+"\n"+tripToll.getTollEndNode());
-	
-
-		if (tripToll.getTollEndNode().equals("Highway 410")) {			
-			
-			Assert.assertEquals(tripToll.getTollDistance(), "47.999", "Test - Distance between QEW - " + "Highway 410");
-			Reporter.log( "Test - Distances is: "+tripToll.getTollDistance());
-			
-			Assert.assertEquals(tripToll.getTollCharge(), "12.00", "Test - Toll between QEW - " + "Highway 410");
-			Reporter.log( "Test - Toll is: "+tripToll.getTollCharge());
+			Reporter.log("Test - Toll is: " + tripToll.getTollCharge());
 		}
 
 	}
 
+	
 
 	@AfterClass
 	void teardown() {
 		tripToll = null;
-		locationNodes = null;
 	}
 }
-
-
-

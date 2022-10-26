@@ -5,15 +5,13 @@
 		<classes>
 			<class name="com.sas.core.TripTollTest">
 				<methods>
-				<include name="setup"></include>
-					<include name="dateProvider_TripEndPoints"></include>
-					<include name="f"></include>
-					<include name="testTollCharges"></include>
-					<include name="testTollCharges1"></include>
+					<include name="setup"></include>
+					<include name="tollQEWto410"></include>
+					<include name="tollQEWto403"></include>
 					<include name="teardown"></include>
 				</methods>
 			</class>
-		</classes>		
+		</classes>
 	</test>
 </suite>
 

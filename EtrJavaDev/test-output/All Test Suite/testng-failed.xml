@@ -5,8 +5,9 @@
     <classes>
       <class name="com.sas.core.TripTollTest">
         <methods>
-          <include name="getTollChargeTest"/>
-          <include name="setup"/>
+          <include name="teardown"/>
+          <include name="tollQEWto403" invocation-numbers="0"/>
+          <include name="tollQEWto410" invocation-numbers="0"/>
         </methods>
       </class> <!-- com.sas.core.TripTollTest -->
     </classes>
