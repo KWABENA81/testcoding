@@ -13,10 +13,11 @@ public class JSONHandler {
 
     private final Logger logger = Logger.getLogger(JSONHandler.class.getName());
     private final Map<Long, Object> locationsMap = new TreeMap<>();
-    private final Set<LocationNode> locationNodes = new TreeSet<>();
+    private final static Set<LocationNode> locationNodes = new TreeSet<>();
 
 
-    public void parseJSONObject(JSONObject jsonObj) {
+    @SuppressWarnings("unchecked")
+	public void parseJSONObject(JSONObject jsonObj) {
         Iterator<String> iterator = jsonObj.keySet().iterator();
         iterator.forEachRemaining(key -> {
             parseValues(key, jsonObj.get(key));
@@ -57,7 +58,8 @@ public class JSONHandler {
     }
 
     private void parseRouteJSONArray(Long id, JSONArray routeArray) {
-        Iterator iterator = routeArray.iterator();
+        @SuppressWarnings("rawtypes")
+		Iterator iterator = routeArray.iterator();
         while (iterator.hasNext()) {
 
             Object jsonObj = iterator.next();
@@ -82,14 +84,15 @@ public class JSONHandler {
     }
 
     private void parseJSONArray(String key, JSONArray jsonArray) {
-        Iterator<Object> arrayIterator = jsonArray.iterator();
+        @SuppressWarnings("unchecked")
+		Iterator<Object> arrayIterator = jsonArray.iterator();
         arrayIterator.forEachRemaining(elem -> {
 
             parseValues(key, elem);
         });
     }
 
-    public Set<LocationNode> getLocationNodes() {
+    public static Set<LocationNode> getLocationNodes() {
         return locationNodes;
     }
 }

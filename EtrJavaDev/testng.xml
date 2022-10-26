@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="All Test Suite">
-    <test name="ClassTest">
-        <classes>
-            <class name="com.sas.TollCalculatorTest">
-                <!--                <methods>-->
-                <!--                    <include name="readLocations"></include>-->
-                <!--                    <include name="getLocation"></include>-->
-                <!--                </methods>-->
-            </class>
-            <class name="com.sas.core.TripTollTest">
-                <!--                <methods>-->
-                <!--                    <include name="readLocations"></include>-->
-                <!--                    <include name="getLocation"></include>-->
-                <!--                </methods>-->
-            </class>
-        </classes>
-    </test>
+	<test name="ClassTest">
+		<classes>
+			<class name="com.sas.core.TripTollTest">
+				<methods>
+				<include name="setup"></include>
+					<include name="dateProvider_TripEndPoints"></include>
+					<include name="f"></include>
+					<include name="testTollCharges"></include>
+					<include name="testTollCharges1"></include>
+					<include name="teardown"></include>
+				</methods>
+			</class>
+		</classes>		
+	</test>
 </suite>
 
