@@ -2,36 +2,28 @@
 <testng-results ignored="0" total="2" passed="2" failed="0" skipped="0">
   <reporter-output>
     <line>
-      <![CDATA[Test - Distances between QEW -
- 
-LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}
-Route{toId=2, distance='6.062}
-
-LocationNode { locationId=14, locationName='Highway 410', latitude=43.668861, longitude=-79.700151}
-Route{toId=13, distance='2.147}
-Route{toId=15, distance='2.223}]]>
+      <![CDATA[Test - Distance from: LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}Route{toId=2, distance='6.062} and LocationNode { locationId=14, locationName='Highway 410', latitude=43.668861, longitude=-79.700151}Route{toId=13, distance='2.147}Route{toId=15, distance='2.223}: 47.999]]>
     </line>
     <line>
-      <![CDATA[Test - Distances between QEW -
- 
-LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}
-Route{toId=2, distance='6.062}
-
-LocationNode { locationId=7, locationName='Highway 403', latitude=43.527953, longitude=-79.725364}
-Route{toId=6, distance='2.917}
-Route{toId=8, distance='4.299}]]>
+      <![CDATA[Test - Toll Charge from: LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}Route{toId=2, distance='6.062} and LocationNode { locationId=14, locationName='Highway 410', latitude=43.668861, longitude=-79.700151}Route{toId=13, distance='2.147}Route{toId=15, distance='2.223}: 12.00]]>
+    </line>
+    <line>
+      <![CDATA[Test - Distance from: LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}Route{toId=2, distance='6.062} and LocationNode { locationId=7, locationName='Highway 403', latitude=43.527953, longitude=-79.725364}Route{toId=6, distance='2.917}Route{toId=8, distance='4.299}: 25.133]]>
+    </line>
+    <line>
+      <![CDATA[Test - Toll Charge from: LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}Route{toId=2, distance='6.062} and LocationNode { locationId=7, locationName='Highway 403', latitude=43.527953, longitude=-79.725364}Route{toId=6, distance='2.917}Route{toId=8, distance='4.299}: 6.28]]>
     </line>
   </reporter-output>
-  <suite started-at="2022-10-26T18:20:04 EDT" name="All Test Suite" finished-at="2022-10-26T18:20:04 EDT" duration-ms="757">
+  <suite started-at="2022-10-27T00:03:25 EDT" name="All Test Suite" finished-at="2022-10-27T00:03:26 EDT" duration-ms="719">
     <groups>
     </groups>
-    <test started-at="2022-10-26T18:20:04 EDT" name="ClassTest" finished-at="2022-10-26T18:20:04 EDT" duration-ms="757">
+    <test started-at="2022-10-27T00:03:25 EDT" name="ClassTest" finished-at="2022-10-27T00:03:26 EDT" duration-ms="719">
       <class name="com.sas.core.TripTollTest">
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.sas.core.TripTollTest@6fd83fc1]" started-at="2022-10-26T18:20:04 EDT" name="setup" finished-at="2022-10-26T18:20:04 EDT" duration-ms="624" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.sas.core.TripTollTest@6fd83fc1]" started-at="2022-10-27T00:03:25 EDT" name="setup" finished-at="2022-10-27T00:03:26 EDT" duration-ms="554" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method signature="tollQEWto410(java.lang.String,java.lang.String)[pri:0, instance:com.sas.core.TripTollTest@6fd83fc1]" started-at="2022-10-26T18:20:04 EDT" name="tollQEWto410" data-provider="getTestData" finished-at="2022-10-26T18:20:04 EDT" duration-ms="30" status="PASS">
+        <test-method signature="tollQEWto410(java.lang.String,java.lang.String)[pri:0, instance:com.sas.core.TripTollTest@6fd83fc1]" started-at="2022-10-27T00:03:26 EDT" name="tollQEWto410" data-provider="getTestData" finished-at="2022-10-27T00:03:26 EDT" duration-ms="76" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -46,18 +38,14 @@ Route{toId=8, distance='4.299}]]>
           </params>
           <reporter-output>
             <line>
-              <![CDATA[Test - Distances between QEW -
- 
-LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}
-Route{toId=2, distance='6.062}
-
-LocationNode { locationId=14, locationName='Highway 410', latitude=43.668861, longitude=-79.700151}
-Route{toId=13, distance='2.147}
-Route{toId=15, distance='2.223}]]>
+              <![CDATA[Test - Distance from: LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}Route{toId=2, distance='6.062} and LocationNode { locationId=14, locationName='Highway 410', latitude=43.668861, longitude=-79.700151}Route{toId=13, distance='2.147}Route{toId=15, distance='2.223}: 47.999]]>
+            </line>
+            <line>
+              <![CDATA[Test - Toll Charge from: LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}Route{toId=2, distance='6.062} and LocationNode { locationId=14, locationName='Highway 410', latitude=43.668861, longitude=-79.700151}Route{toId=13, distance='2.147}Route{toId=15, distance='2.223}: 12.00]]>
             </line>
           </reporter-output>
         </test-method> <!-- tollQEWto410 -->
-        <test-method signature="tollQEWto403(java.lang.String,java.lang.String)[pri:0, instance:com.sas.core.TripTollTest@6fd83fc1]" started-at="2022-10-26T18:20:04 EDT" name="tollQEWto403" data-provider="getTestData" finished-at="2022-10-26T18:20:04 EDT" duration-ms="3" status="PASS">
+        <test-method signature="tollQEWto403(java.lang.String,java.lang.String)[pri:0, instance:com.sas.core.TripTollTest@6fd83fc1]" started-at="2022-10-27T00:03:26 EDT" name="tollQEWto403" data-provider="getTestData" finished-at="2022-10-27T00:03:26 EDT" duration-ms="9" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -72,18 +60,14 @@ Route{toId=15, distance='2.223}]]>
           </params>
           <reporter-output>
             <line>
-              <![CDATA[Test - Distances between QEW -
- 
-LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}
-Route{toId=2, distance='6.062}
-
-LocationNode { locationId=7, locationName='Highway 403', latitude=43.527953, longitude=-79.725364}
-Route{toId=6, distance='2.917}
-Route{toId=8, distance='4.299}]]>
+              <![CDATA[Test - Distance from: LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}Route{toId=2, distance='6.062} and LocationNode { locationId=7, locationName='Highway 403', latitude=43.527953, longitude=-79.725364}Route{toId=6, distance='2.917}Route{toId=8, distance='4.299}: 25.133]]>
+            </line>
+            <line>
+              <![CDATA[Test - Toll Charge from: LocationNode { locationId=1, locationName='QEW', latitude=43.336962, longitude=-79.830394}Route{toId=2, distance='6.062} and LocationNode { locationId=7, locationName='Highway 403', latitude=43.527953, longitude=-79.725364}Route{toId=6, distance='2.917}Route{toId=8, distance='4.299}: 6.28]]>
             </line>
           </reporter-output>
         </test-method> <!-- tollQEWto403 -->
-        <test-method is-config="true" signature="teardown()[pri:0, instance:com.sas.core.TripTollTest@6fd83fc1]" started-at="2022-10-26T18:20:04 EDT" name="teardown" finished-at="2022-10-26T18:20:04 EDT" duration-ms="1" status="PASS">
+        <test-method is-config="true" signature="teardown()[pri:0, instance:com.sas.core.TripTollTest@6fd83fc1]" started-at="2022-10-27T00:03:26 EDT" name="teardown" finished-at="2022-10-27T00:03:26 EDT" duration-ms="1" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- teardown -->

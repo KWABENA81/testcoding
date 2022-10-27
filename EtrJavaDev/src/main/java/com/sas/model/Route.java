@@ -42,7 +42,7 @@ public class Route implements Comparable<Route> {
 
     @Override
     public String toString() {
-        return "\nRoute{" +
+        return "\tRoute{" +
                 "toId=" + toId +
                 ", distance='" + distance +
                 '}';

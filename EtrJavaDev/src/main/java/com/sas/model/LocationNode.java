@@ -71,7 +71,7 @@ public class LocationNode implements Comparable<LocationNode> {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\nLocationNode {");
+        stringBuilder.append("\tLocationNode {");
         stringBuilder.append(" locationId=");
         stringBuilder.append(locationId);
         stringBuilder.append(", locationName='");
